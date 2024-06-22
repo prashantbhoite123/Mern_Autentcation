@@ -6,6 +6,7 @@ import SignIn from "./pages/SignIn"
 import { Toaster } from "react-hot-toast"
 import Home from "./pages/Home"
 import Profile from "./pages/Profile"
+import ProtectRoute from "./components/ProtectRoute"
 
 function App() {
   return (
@@ -13,8 +14,10 @@ function App() {
       <Toaster />
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route element={<ProtectRoute />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+        </Route>
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
       </Routes>

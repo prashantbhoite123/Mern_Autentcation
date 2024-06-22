@@ -58,11 +58,15 @@ export const getProfile = (req, res) => {
   res.status(200).json(rest)
 }
 
-export const logout = (req, res) => {
-  res
-    .clearCookie("token")
-    .status(200)
-    .json({ success: true, message: "user logout successfully" })
+export const logout = (req, res, next) => {
+  try {
+    res
+      .clearCookie("token")
+      .status(200)
+      .json({ success: true, message: "user logout successfully" })
+  } catch (error) {
+    next(error.message)
+  }
 }
 
 export const userUpdate = async (req, res, next) => {

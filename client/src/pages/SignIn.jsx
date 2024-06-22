@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast"
 
 function SignIn() {
   const [formData, setFormData] = useState(null)
-  const { loading, currentUser } = useSelector((state) => state.user)
+  const { loading } = useSelector((state) => state.user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -89,7 +89,7 @@ function SignIn() {
 
           <div>
             <button
-              //   disabled={loading}
+              disabled={loading}
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-400 disabled:cursor-not-allowed"
             >
