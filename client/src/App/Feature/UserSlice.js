@@ -1,7 +1,9 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
 
 const initialState = {
-  currentUser: null,
+  currentUser: sessionStorage.getItem("currentUser")
+    ? JSON.parse(sessionStorage.getItem("currentUser"))
+    : null,
   loading: false,
 }
 
@@ -9,16 +11,16 @@ const UserSlice = createSlice({
   name: "User",
   initialState,
   reducers: {
-    fetchStart: (state, action) => {
+    fetchStart: (state) => {
       state.loading = true
     },
-    fetchFail: (state, action) => {
+    fetchFail: (state) => {
       state.loading = false
-      localStorage.setItem(null)
+      sessionStorage.setItem(null)
     },
     fetchSuccess: (state, action) => {
       state.currentUser = action.payload
-      localStorage.setItem("currentUser", JSON.stringify(action.payload))
+      sessionStorage.setItem("currentUser", JSON.stringify(action.payload))
       state.loading = false
     },
   },

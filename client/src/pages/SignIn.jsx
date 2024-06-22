@@ -1,28 +1,45 @@
 import React, { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
-import { fetchFail, fetchStart, fetchSuccess  } from "../App/Feature/UserSlice"
+import { fetchFail, fetchStart, fetchSuccess } from "../App/Feature/UserSlice"
+import { toast } from "react-hot-toast"
 
 function SignIn() {
   const [formData, setFormData] = useState(null)
-  const { loading } = useSelector((state) => state.user)
+  const { loading, currentUser } = useSelector((state) => state.user)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const handleOnChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    try {
+      e.preventDefault()
+      dispatch(fetchStart())
+      const res = await fetch(`/api/user/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "Application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+      const data = await res.json()
 
-    const res = await fetch(`/api/user/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "Application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-    const data = await res.json()
+      if (data.success === false) {
+        dispatch(fetchFail())
+        throw new Error(data.message)
+      }
+
+      dispatch(fetchSuccess(data))
+
+      toast.success(`welcome, ${data.name?.toUpperCase()}`)
+      navigate("/")
+    } catch (error) {
+      console.log(`Error while Sign-In ${error.message}`)
+      toast.error(error.message)
+    }
   }
 
   return (
@@ -76,14 +93,10 @@ function SignIn() {
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-400 disabled:cursor-not-allowed"
             >
-              {/* {loading ? `LOADING...` : `SIGN UP`} */}
-              SIGN UP
+              {loading ? `LOADING...` : `SIGN UP`}
             </button>
           </div>
           <hr />
-          {/* <div>
-            <OAuth />
-          </div> */}
         </form>
 
         <p className="mt-10 text-center text-sm text-gray-500">
