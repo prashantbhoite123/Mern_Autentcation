@@ -125,3 +125,57 @@ export const deleteUser = async (req, res) => {
     console.log(`Error While Delete User :${error}`)
   }
 }
+
+export const googleAuth = async (req, res, next) => {
+  try {
+    const { name, email, profilePic } = req.body
+
+    const isValidEmail = await User.findOne({ email })
+
+    if (isValidEmail) {
+      const token = jwt.sign(
+        { _id: isValidEmail._id },
+        process.env.SECRET_KEY,
+        {
+          expiresIn: "1d",
+        }
+      )
+
+      const { password, ...rest } = isValidEmail._doc
+
+      return res
+        .status(200)
+        .cookie("cookie", token, {
+          httpOnly: true,
+          maxAge: 24 * 60 * 60 * 1000,
+        })
+        .json(rest)
+    }
+
+    const password = Math.floor(Math.random() * 80000000 + 80000000).toString()
+    const bcryptPassword = bcryptjs.hashSync(password, 10)
+
+    const user = await User.create({
+      name,
+      email,
+      password: bcryptPassword,
+      profilePic,
+    })
+
+    const token = jwt.sign({ _id: user._id }, process.env.SECRET_KEY, {
+      expiresIn: "1d",
+    })
+
+    const { password: abc, ...rest } = user._doc
+    res
+      .status(200)
+      .cookie("cookie", token, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      })
+      .json(rest)
+  } catch (error) {
+    next(error)
+    console.log(`Error while google-Auth : ${error.message}`)
+  }
+}

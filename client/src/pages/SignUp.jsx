@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-hot-toast"
+import GoogleAuthBtn from "../components/GoogleAuthBtn"
 
 function SignUp() {
   const navigate = useNavigate()
@@ -101,9 +102,7 @@ function SignUp() {
             </button>
           </div>
           <hr />
-          {/* <div>
-            <OAuth />
-          </div> */}
+          <GoogleAuthBtn />
         </form>
 
         <p className="mt-10 text-center text-sm text-gray-500">

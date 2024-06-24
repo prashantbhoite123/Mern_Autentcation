@@ -2,6 +2,7 @@ import express from "express"
 import {
   deleteUser,
   getProfile,
+  googleAuth,
   logout,
   postLogin,
   postRegister,
@@ -17,5 +18,7 @@ router.get("/logout", isAuthentication, logout)
 
 router.put("/update/:id", isAuthentication, userUpdate)
 router.delete("/delete/:id", isAuthentication, deleteUser)
+
+router.post("/google-auth", googleAuth)
 
 export default router

@@ -26,10 +26,20 @@ const UserSlice = createSlice({
     logoutUser: (state, action) => {
       sessionStorage.clear()
     },
+    updateSuccess: (state, action) => {
+      state.currentUser = action.payload
+      sessionStorage.setItem("currentUser", JSON.stringify(action.payload))
+      state.loading = false
+    },
   },
 })
 
-export const { fetchFail, fetchStart, fetchSuccess, logoutUser } =
-  UserSlice.actions
+export const {
+  fetchFail,
+  fetchStart,
+  fetchSuccess,
+  logoutUser,
+  updateSuccess,
+} = UserSlice.actions
 
 export default UserSlice.reducer
